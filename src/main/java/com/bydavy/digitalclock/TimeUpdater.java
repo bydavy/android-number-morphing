@@ -14,12 +14,8 @@ public class TimeUpdater {
 		@Override
 		public void run() {
 			int time = mTime.getTime();
-			// Not all number are implemented for now
-			if (time == DigitMorpher.MAX_IMPLEMENTED) {
-				mTime.setTime(DigitMorpher.MIN_IMPLEMENTED);
-			} else {
-				mTime.setTime(time + 1);
-			}
+			time = ++time % 10;
+			mTime.setTime(time);
 			scheduleNextTime();
 		}
 	};

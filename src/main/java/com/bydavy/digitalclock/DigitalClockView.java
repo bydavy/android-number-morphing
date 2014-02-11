@@ -90,7 +90,7 @@ public class DigitalClockView extends View implements Time.TimeListener {
 
 		canvas.translate(getWidth() / 2, getHeight() / 3);
 		int time = mTime.getTime();
-		if (mAnimationPercent > 0.99999 || time == DigitMorpher.MIN_IMPLEMENTED) { // FIXME animation from 0 to 1 not implemented yet
+		if (mAnimationPercent > 0.99999) {
 			mDigitMorpher.draw(canvas, time);
 		} else {
 			mDigitMorpher.drawAnimation(canvas, time, mAnimationPercent);
@@ -100,7 +100,7 @@ public class DigitalClockView extends View implements Time.TimeListener {
 
 	private void debugDrawAllNumbers(Canvas canvas) {
 		canvas.save();
-		canvas.translate(0, getHeight() / 2);
+		canvas.translate(10, getHeight() / 2);
 		for (int i = 0; i < 10; i++) {
 			mDigitMorpher.draw(canvas, i);
 			canvas.translate(100, 0);

@@ -10,10 +10,6 @@ public class DigitMorpher {
 
 	private static final int POINTS_IN_DIGIT = 13 * 2;
 
-	//FIXME Remove when fully implemented
-	public static final int MIN_IMPLEMENTED = 1;
-	public static final int MAX_IMPLEMENTED = 9;
-
 	private final Paint mPaint;
 	private final Path mPath;
 
@@ -30,7 +26,7 @@ public class DigitMorpher {
 
 		// FIXME I should write a tool to tweak the bezier curve and make prettier digits
 		digits = new float[10][];
-		//digits[0] = createZero();
+		digits[0] = createZero();
 		digits[1] = createOne();
 		digits[2] = createTwo();
 		digits[3] = createThree();
@@ -119,9 +115,39 @@ public class DigitMorpher {
 	}
 
 	private static float[] createZero() {
+		float zeroMaxX = maxX();
+
+		float halfHeight = maxY() / 2;
+		float halfWidth = zeroMaxX / 2;
+
+		float controlPointX = halfWidth / 2 + halfHeight / 4;
+		float controlPointY = halfHeight / 2;
+
+		float p1x = zeroMaxX;
+		float p1y = halfHeight;
+
+		float p2x = halfWidth;
+		float p2y = maxY();
+
+		float p3x = originX();
+		float p3y = halfHeight;
+
+		float p4x = halfWidth;
+		float p4y = originY();
+
+		float p5x = p1x;
+		float p5y = p1y;
+
 		float[] zero = createDigitArray();
 
-		// WIP
+		int i = 0;
+		i = addPoint(zero, i, p1x, p1y);
+		i = addBezierCurve(zero, i, p1x, p1y + controlPointY, p2x + controlPointX, p2y, p2x, p2y);
+		i = addBezierCurve(zero, i, p2x - controlPointX, p2y, p3x, p3y + controlPointY, p3x, p3y);
+		i = addBezierCurve(zero, i, p3x, p3y - controlPointY, p4x - controlPointX, p4y, p4x, p4y);
+		i = addBezierCurve(zero, i, p4x + controlPointX, p4y, p5x, p5y - controlPointY, p5x, p5y);
+
+		checkSize(zero, i);
 
 		return zero;
 	}
@@ -193,17 +219,17 @@ public class DigitMorpher {
 	private static float[] createThree() {
 		float threeMaxX = maxX();
 
-		float halfMaxX = threeMaxX / 2;
-		float fourthMaxX = halfMaxX / 2;
+		float radius = threeMaxX / 2;
+		float fourthMaxX = radius / 2;
 
 		float p1x = originX();
-		float p1y = halfMaxX;
+		float p1y = radius;
 
-		float p2x = halfMaxX;
+		float p2x = radius;
 		float p2y = maxY() / 2;
 
 		float p3x = originX();
-		float p3y = maxY() - halfMaxX;
+		float p3y = maxY() - radius;
 
 		// Between p1 and p2
 		float soft1x = threeMaxX;
@@ -437,7 +463,7 @@ public class DigitMorpher {
 		i = addBezierCurve(nine, i, soft1x, soft1y - radiusControl, p2x, p2y - radiusControl, p2x, p2y);
 		i = addBezierStraightLine(nine, i, p3x, p3y);
 		// FIXME Doesn't look good
-		i = addBezierCurve(nine, i, p3x, p3y + (diameter * (2/3f)), p4x + radius, p4y, p4x, p4y);
+		i = addBezierCurve(nine, i, p3x, p3y + (diameter * (2 / 3f)), p4x + radius, p4y, p4x, p4y);
 
 		checkSize(nine, i);
 
