@@ -100,7 +100,7 @@ public class DigitalClockView extends View implements Time.TimeListener {
 
 	private void debugDrawAllNumbers(Canvas canvas) {
 		canvas.save();
-		canvas.translate(getWidth() / 10, getHeight() / 2);
+		canvas.translate(0, getHeight() / 2);
 		for (int i = 0; i < 10; i++) {
 			mDigitMorpher.draw(canvas, i);
 			canvas.translate(100, 0);
