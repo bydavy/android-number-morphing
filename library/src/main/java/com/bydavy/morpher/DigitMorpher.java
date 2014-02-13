@@ -1,4 +1,4 @@
-package com.bydavy.digitalclock;
+package com.bydavy.morpher;
 
 
 import android.graphics.Canvas;
@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 
 public class DigitMorpher {
-
 	private static final int POINTS_IN_DIGIT = 13 * 2;
 
 	private final Paint mPaint;
@@ -123,29 +122,30 @@ public class DigitMorpher {
 		float controlPointX = halfWidth / 2 + halfHeight / 4;
 		float controlPointY = halfHeight / 2;
 
-		float p1x = zeroMaxX;
+		float p1x = originX();
 		float p1y = halfHeight;
 
 		float p2x = halfWidth;
-		float p2y = maxY();
+		float p2y = originY();
 
-		float p3x = originX();
+		float p3x = zeroMaxX;
 		float p3y = halfHeight;
 
 		float p4x = halfWidth;
-		float p4y = originY();
+		float p4y = maxY();
 
 		float p5x = p1x;
 		float p5y = p1y;
+
 
 		float[] zero = createDigitArray();
 
 		int i = 0;
 		i = addPoint(zero, i, p1x, p1y);
-		i = addBezierCurve(zero, i, p1x, p1y + controlPointY, p2x + controlPointX, p2y, p2x, p2y);
-		i = addBezierCurve(zero, i, p2x - controlPointX, p2y, p3x, p3y + controlPointY, p3x, p3y);
-		i = addBezierCurve(zero, i, p3x, p3y - controlPointY, p4x - controlPointX, p4y, p4x, p4y);
-		i = addBezierCurve(zero, i, p4x + controlPointX, p4y, p5x, p5y - controlPointY, p5x, p5y);
+		i = addBezierCurve(zero, i, p1x, p1y - controlPointY, p2x - controlPointX, p2y, p2x, p2y);
+		i = addBezierCurve(zero, i, p2x + controlPointX, p2y, p3x, p3y - controlPointY, p3x, p3y);
+		i = addBezierCurve(zero, i, p3x, p3y + controlPointY, p4x + controlPointX, p4y, p4x, p4y);
+		i = addBezierCurve(zero, i, p4x - controlPointX, p4y, p5x, p5y + controlPointY, p5x, p5y);
 
 		checkSize(zero, i);
 
@@ -517,5 +517,4 @@ public class DigitMorpher {
 	private static float animate(float a, float b, float percent) {
 		return a * (1 - percent) + b * percent;
 	}
-
 }

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import com.bydavy.morpher.DigitMorpher;
 
 public class DigitalClockView extends View implements Time.TimeListener {
 	private DigitMorpher mDigitMorpher;
