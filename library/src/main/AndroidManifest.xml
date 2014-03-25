@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.bydavy.morpher">
 
+
+    <uses-sdk android:minSdkVersion="11"/>
+
     <application>
+
     </application>
 </manifest>

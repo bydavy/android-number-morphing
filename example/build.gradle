@@ -2,7 +2,8 @@ apply plugin: 'android'
 
 dependencies {
     compile 'com.android.support:support-v4:13.0.0'
-    compile ':library'
+    compile project(':library')
+    //compile group: 'com.google.guava', name: 'guava', version: '16.0.1'
     //debugCompile 'com.android.support:support-v13:13.0.0'
 
     //compile 'com.google.android.gms:play-services:3.1.36'

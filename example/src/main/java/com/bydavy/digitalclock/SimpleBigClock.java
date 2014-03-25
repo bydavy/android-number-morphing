@@ -2,33 +2,24 @@ package com.bydavy.digitalclock;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 import com.bydavy.morpher.DigitalClockView;
 import com.bydavy.morpher.font.DFont;
 
 import java.text.SimpleDateFormat;
 
-public class Main extends Activity implements SystemClockManager.SystemClockListener {
+public class SimpleBigClock extends Activity implements SystemClockManager.SystemClockListener {
 
 	private DigitalClockView mDigitalClockView;
 	private SystemClockManager mSystemClockManager;
 	private SimpleDateFormat mSimpleDateFormat;
-	private DigitalClockView mDigitalClockViewPadding;
-	private DigitalClockView mDigitalClockViewBig;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.simple_big_clock);
 
 		mDigitalClockView = (DigitalClockView) findViewById(R.id.digitalClock);
-
-		mDigitalClockViewPadding = (DigitalClockView) findViewById(R.id.digitalClockPadding);
-		mDigitalClockViewPadding.setFont(new DFont(120, 10));
-		//mDigitalClockViewPadding.setFontSize(100);
-
-		mDigitalClockViewBig = (DigitalClockView) findViewById(R.id.digitalClockBig);
-		//mDigitalClockViewBig.setMorphingDuration(1200);
+		mDigitalClockView.setFont(new DFont(130, 10));
 
 		mSimpleDateFormat = new SimpleDateFormat("hh:mm:ss");
 		mSystemClockManager = new SystemClockManager(this);
@@ -50,14 +41,6 @@ public class Main extends Activity implements SystemClockManager.SystemClockList
 	public void onTimeChanged(long time) {
 		String formattedTime = mSimpleDateFormat.format(time);
 
-		if (mDigitalClockView != null) {
-			mDigitalClockView.setTimeNoAnimation(formattedTime);
-		}
-		if (mDigitalClockViewPadding != null) {
-			mDigitalClockViewPadding.setTime(formattedTime);
-		}
-		if (mDigitalClockViewBig != null) {
-			mDigitalClockViewBig.setTime(formattedTime);
-		}
+		mDigitalClockView.setTime(formattedTime);
 	}
 }
