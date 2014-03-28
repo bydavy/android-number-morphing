@@ -38,16 +38,4 @@ public class DrawingHelper {
 
 		return index;
 	}
-
-	/**
-	 * Ideally that should be inline to avoid cost of method's invokation
-	 *
-	 * @param a origin
-	 * @param b destination
-	 * @param percent progression
-	 * @return
-	 */
-	public static float morph(float a, float b, float percent) {
-		return a * (1 - percent) + b * percent;
-	}
 }

@@ -604,7 +604,7 @@ public class DFont implements Font {
 		mPath.moveTo(array[i++], array[i++]);
 
 		final int size = array.length;
-		while (i < size) {
+		while (i < size - 5) {
 			mPath.cubicTo(array[i++], array[i++], array[i++], array[i++], array[i++], array[i++]);
 		}
 
@@ -617,14 +617,29 @@ public class DFont implements Font {
 
 		mPath.reset();
 
+		// It's intentionally duplicated (as creating a method will be time consuming due to method overhead)
 		int i = 0;
-		mPath.moveTo(DrawingHelper.morph(a[i], b[i++], percent), DrawingHelper.morph(a[i], b[i++], percent));
+		float x = a[i] * (1 - percent) + b[i] * percent;
+		i++;
+		float y = a[i] * (1 - percent) + b[i] * percent;
+		i++;
+		mPath.moveTo(x, y);
 
 		final int size = a.length;
-		while (i < size) {
-			mPath.cubicTo(DrawingHelper.morph(a[i], b[i++], percent), DrawingHelper.morph(a[i], b[i++], percent),
-					DrawingHelper.morph(a[i], b[i++], percent), DrawingHelper.morph(a[i], b[i++], percent),
-					DrawingHelper.morph(a[i], b[i++], percent), DrawingHelper.morph(a[i], b[i++], percent));
+		while (i < size - 5) {
+			float x1 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float y1 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float x2 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float y2 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float x3 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float y3 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			mPath.cubicTo(x1, y1, x2, y2, x3, y3);
 		}
 
 		canvas.drawPath(mPath, mPaint);
@@ -636,7 +651,7 @@ public class DFont implements Font {
 
 		final int size = a.length;
 		for (int i = 0; i < size; i++) {
-			result[i] = DrawingHelper.morph(a[i], b[i], percent);
+			result[i] = a[i] * (1 - percent) + b[i] * percent;
 		}
 	}
 
@@ -644,14 +659,14 @@ public class DFont implements Font {
 	public float computeWidth(float[] a, float[] b, float percent) {
 		if (a == null || b == null) return 0;
 
-		return DrawingHelper.morph(a[0], b[0], percent);
+		return a[0] * (1 - percent) + b[0] * percent;
 	}
 
 	@Override
 	public void saveWidth(float[] a, float[] b, float percent, float[] result) {
 		if (a == null || b == null || result == null) return;
 
-		result[0] = DrawingHelper.morph(a[0], b[0], percent);
+		result[0] = a[0] * (1 - percent) + b[0] * percent;
 	}
 
 	@Override
