@@ -239,7 +239,7 @@ public class DigitalClockView extends View {
 		if (mChars != null && mWidth != null) {
 			float xSeparator = mFont.getGlyphSeparatorWidth();
 
-			int size = mChars.length;
+			final int size = mChars.length;
 			for (int i = 0; i < size; i++) {
 				if (!mIsColumnChar[i]) {
 					if (!isMorphingAnimationRunning()) {
@@ -273,7 +273,7 @@ public class DigitalClockView extends View {
 		canvas.translate(getPaddingLeft(), getPaddingTop());
 		if (mChars != null) {
 			float charWidth;
-			int size = mChars.length;
+			final int size = mChars.length;
 			for (int i = 0; i < size; i++) {
 				if (!mIsColumnChar[i]) {
 					if (!isMorphingAnimationRunning()) {
