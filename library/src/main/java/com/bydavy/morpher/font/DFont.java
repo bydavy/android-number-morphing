@@ -1,10 +1,7 @@
 package com.bydavy.morpher.font;
 
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.*;
 import com.bydavy.morpher.DrawingHelper;
 import com.bydavy.morpher.Font;
 
@@ -42,11 +39,13 @@ public class DFont implements Font {
 		mPath = new Path();
 
 		mPaint = new Paint();
-		mPaint.setAntiAlias(true);
 		mPaint.setColor(Color.argb(255, 255, 255, 255));
+		mPaint.setAntiAlias(true);
 		mPaint.setStyle(Paint.Style.STROKE);
+		mPaint.setStrokeJoin(Paint.Join.ROUND);
+		mPaint.setStrokeCap(Paint.Cap.BUTT);
+		mPaint.setPathEffect(new CornerPathEffect(thickness/5));
 		mPaint.setStrokeWidth(thickness);
-		mPaint.setStrokeJoin(Paint.Join.MITER);
 
 		mSize = size;
 		mThickness = thickness;
@@ -121,7 +120,7 @@ public class DFont implements Font {
 
 	@Override
 	public float getGlyphSeparatorWidth() {
-		return mSize * .10f;
+		return mSize * .150f;
 	}
 
 	private float boundsX() {
@@ -642,6 +641,20 @@ public class DFont implements Font {
 	}
 
 	@Override
+	public float computeWidth(float[] a, float[] b, float percent) {
+		if (a == null || b == null) return 0;
+
+		return DrawingHelper.morph(a[0], b[0], percent);
+	}
+
+	@Override
+	public void saveWidth(float[] a, float[] b, float percent, float[] result) {
+		if (a == null || b == null || result == null) return;
+
+		result[0] = DrawingHelper.morph(a[0], b[0], percent);
+	}
+
+	@Override
 	public void drawColumn(Canvas canvas) {
 		float halfHeight = innerBoxHeight() / 2f;
 		float halfWidth = getColumnWidth() / 2f;
@@ -654,19 +667,5 @@ public class DFont implements Font {
 	@Override
 	public  float getColumnWidth() {
 		return mColumnWidth;
-	}
-
-	@Override
-	public float computeWidth(float[] a, float[] b, float percent) {
-		if (a == null || b == null) return 0;
-
-		return DrawingHelper.morph(a[0], b[0], percent);
-	}
-
-	@Override
-	public void saveWidth(float[] a, float[] b, float percent, float[] result) {
-		if (a == null || b == null || result == null) return;
-
-		result[0] = DrawingHelper.morph(a[0], b[0], percent);
 	}
 }

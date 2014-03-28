@@ -21,7 +21,7 @@ public interface Font {
 
 	/**
 	 * Returns the number of points defining each glyph. This is a constant per font
-	 * in order to generate smooth transitions.
+	 * in order to simplify morphing.
 	 *
 	 * @return
 	 */
@@ -70,11 +70,13 @@ public interface Font {
 
 	void save(float[] a, float[] b, float percent, float[] result);
 
-	void drawColumn(Canvas canvas);
-
-	float getColumnWidth();
-
 	float computeWidth(float[] a, float[] b, float percent);
 
 	void saveWidth(float[] floats, float[] mChar, float percent, float[] result);
+
+
+	// FIXME Doesn't fit well in my current architecture
+	void drawColumn(Canvas canvas);
+
+	float getColumnWidth();
 }

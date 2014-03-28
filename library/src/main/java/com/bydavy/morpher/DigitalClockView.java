@@ -3,8 +3,6 @@ package com.bydavy.morpher;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -12,19 +10,16 @@ import com.bydavy.morpher.font.DFont;
 
 public class DigitalClockView extends View {
 
-	public static int DEFAULT_ANIMATION_DURATION = 300;
+	public static int DEFAULT_MORPHING_DURATION = 300;
 
 	public static final Font DEFAULT_FONT = new DFont(170, 10);
 
 	private Font mFont;
-	private int mColor;
-	private float mThickness;
-	private int mFontSize;
 	private int mMorphingDurationInMs;
 
 	private float mMorphingPercent;
 
-	// Local variables (opposed to mPreviousChars and mChars that are immutable)
+	// Local variables (opposed to mPreviousChars and mChars that hold immutable content "leaked" from the Font object)
 	private float[][] mLocalChars;
 	private float[][] mLocalWidth;
 
@@ -41,7 +36,6 @@ public class DigitalClockView extends View {
 	// FIXME The column char doesn't fit in my current design
 	private boolean[] mIsColumnChar;
 
-	private Paint mPaint;
 	private ObjectAnimator mMorphingAnimation;
 
 	public DigitalClockView(Context context) {
@@ -63,15 +57,7 @@ public class DigitalClockView extends View {
 
 	private void init() {
 		mFont = DEFAULT_FONT;
-		mMorphingDurationInMs = DEFAULT_ANIMATION_DURATION;
-
-		mPaint = new Paint();
-		mPaint.setColor(Color.argb(255, 0, 255, 0));
-		mPaint.setStrokeWidth(3);
-
-		/*setFontColor(Color.argb(255, 255, 255, 255));
-		setFontThickness(3);
-		setFontSize(100);*/
+		mMorphingDurationInMs = DEFAULT_MORPHING_DURATION;
 	}
 
 	public void setTime(String time) {
@@ -86,7 +72,7 @@ public class DigitalClockView extends View {
 		// Update only if time changed
 		if (time == mText || (mText != null && mText.equals(time))) return;
 
-		// Changing text length over time is not supported (at least not "morphed")
+		// Changing text length is not supported (at least not "morphed")
 		if (mText == null || (mPreviousText != null && time != null && (mPreviousText.length() != time.length() || columnCharChangedPosition(mPreviousText, time)))) {
 			shouldMorph = false;
 		}
@@ -94,7 +80,7 @@ public class DigitalClockView extends View {
 		int newSize = time.length();
 		int pointsCount = mFont.getPointsCount();
 
-		// Here we might reallocate memory (this view is not designed to frequently changed the time's string length)
+		// Here we might reallocate memory (this view is not designed to change frequently)
 		mChars = ArrayHelper.expandIfRequired(mChars, newSize);
 		mWidth = ArrayHelper.expandIfRequired(mWidth, newSize);
 
@@ -106,7 +92,7 @@ public class DigitalClockView extends View {
 
 		mIsColumnChar = ArrayHelper.expandIfRequired(mIsColumnChar, newSize);
 
-		// Stage current chars and width in order to generate a morphing animation
+		// Save current chars and width in order to generate a morphing animation
 		if (shouldMorph) {
 			float[][] originChars;
 			float[][] originWidths;
@@ -116,7 +102,8 @@ public class DigitalClockView extends View {
 				originWidths = mWidth;
 			} else {
 				// Save current morphing animation accordingly to the current state
-				// FIXME Ideally we should not rely on the current mMorphingPercent but rather recompute the percentage based on current time
+				// FIXME Ideally we should not rely on the current mMorphingPercent but rather recompute the percentage
+				// based on current time - start time / duration
 				int size = mText.length();
 				for (int i = 0; i < size; i++) {
 					// Save result to mLocalChars and mLocalWidth. Both are local array that can be edited (not the case of
@@ -166,7 +153,7 @@ public class DigitalClockView extends View {
 		}
 	}
 
-	private boolean isMorphingAnimationRunning() {
+	public boolean isMorphingAnimationRunning() {
 		return mMorphingAnimation != null && mMorphingAnimation.isRunning();
 	}
 
@@ -197,10 +184,11 @@ public class DigitalClockView extends View {
 	public void setFont(Font font) {
 		//if (mFont != font) {
 		mFont = font;
+		cancelMorphingAnimation();
 
+		// Force text changed to repopulate internal arrays
 		String time = mText;
 		mText = null;
-		cancelMorphingAnimation();
 		setTime(time);
 		//}
 	}
@@ -263,7 +251,7 @@ public class DigitalClockView extends View {
 					x += mFont.getColumnWidth();
 				}
 
-				if (i < size) {
+				if (i < size - 1) {
 					x += xSeparator;
 				}
 			}
@@ -279,7 +267,7 @@ public class DigitalClockView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		float xSeparator = mFont.getGlyphSeparatorWidth() + 2;
+		float xSeparator = mFont.getGlyphSeparatorWidth();
 
 		canvas.save();
 		canvas.translate(getPaddingLeft(), getPaddingTop());
@@ -300,13 +288,16 @@ public class DigitalClockView extends View {
 					charWidth = mFont.getColumnWidth();
 				}
 
-				canvas.translate(charWidth + xSeparator, 0);
+				if (i < size - 1) {
+					canvas.translate(charWidth + xSeparator, 0);
+				}
 			}
 
 		}
 		canvas.restore();
 	}
 
+	@SuppressWarnings("unused")
 	public void setMorphingPercent(float percent) {
 		mMorphingPercent = percent;
 
@@ -314,6 +305,7 @@ public class DigitalClockView extends View {
 		invalidate();
 	}
 
+	@SuppressWarnings("unused")
 	public float getMorphingPercent() {
 		return mMorphingPercent;
 	}

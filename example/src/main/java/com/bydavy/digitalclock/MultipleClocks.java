@@ -7,25 +7,30 @@ import com.bydavy.morpher.font.DFont;
 
 import java.text.SimpleDateFormat;
 
-public class SimpleBigClock extends Activity implements SystemClockManager.SystemClockListener {
-
-	public static final String EXTRA_MORPHING_DURATION = "morphing_duration";
+public class MultipleClocks extends Activity implements SystemClockManager.SystemClockListener {
 
 	private DigitalClockView mDigitalClockView;
 	private SystemClockManager mSystemClockManager;
 	private SimpleDateFormat mSimpleDateFormat;
+	private DigitalClockView mDigitalClockViewPadding;
+	private DigitalClockView mDigitalClockViewBig;
+	private SimpleDateFormat mShortDateFormat;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.simple_big_clock);
+		setContentView(R.layout.multiple);
 
 		mDigitalClockView = (DigitalClockView) findViewById(R.id.digitalClock);
-		mDigitalClockView.setFont(new DFont(130, 10));
+		mDigitalClockView.setFont(new DFont(120, 5));
 
-		int morphingDuration = getIntent().getIntExtra(EXTRA_MORPHING_DURATION, DigitalClockView.DEFAULT_MORPHING_DURATION);
-		mDigitalClockView.setMorphingDuration(morphingDuration);
+		mDigitalClockViewPadding = (DigitalClockView) findViewById(R.id.digitalClockPadding);
+		mDigitalClockViewPadding.setFont(new DFont(100, 10));
 
+		mDigitalClockViewBig = (DigitalClockView) findViewById(R.id.digitalClockBig);
+		mDigitalClockViewBig.setFont(new DFont(120, 12));
+
+		mShortDateFormat = new SimpleDateFormat("hh:mm");
 		mSimpleDateFormat = new SimpleDateFormat("hh:mm:ss");
 		mSystemClockManager = new SystemClockManager(this);
 	}
@@ -44,11 +49,11 @@ public class SimpleBigClock extends Activity implements SystemClockManager.Syste
 
 	@Override
 	public void onTimeChanged(long time) {
+		String shortFormattedTime = mShortDateFormat.format(time);
 		String formattedTime = mSimpleDateFormat.format(time);
 
-		// Useful when a long morphing duration is set otherwise we never see the destination number as it's always morphing
-		if (!mDigitalClockView.isMorphingAnimationRunning()) {
-			mDigitalClockView.setTime(formattedTime);
-		}
+		mDigitalClockView.setTimeNoAnimation(formattedTime);
+		mDigitalClockViewPadding.setTime(formattedTime);
+		mDigitalClockViewBig.setTime(formattedTime);
 	}
 }

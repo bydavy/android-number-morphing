@@ -40,7 +40,7 @@ public class DrawingHelper {
 	}
 
 	/**
-	 * Ideally that should be inline to having cost the overhead of method's invokation
+	 * Ideally that should be inline to avoid cost of method's invokation
 	 *
 	 * @param a origin
 	 * @param b destination
