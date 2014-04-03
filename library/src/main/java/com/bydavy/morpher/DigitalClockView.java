@@ -33,8 +33,8 @@ public class DigitalClockView extends View {
 	private float[][] mChars;
 	private float[][] mWidth;
 
-	// FIXME The column char doesn't fit in my current design
-	private boolean[] mIsColumnChar;
+	// FIXME The colon char doesn't fit in my current design
+	private boolean[] mIsColonChar;
 
 	private ObjectAnimator mMorphingAnimation;
 
@@ -73,7 +73,7 @@ public class DigitalClockView extends View {
 		if (time == mText || (mText != null && mText.equals(time))) return;
 
 		// Changing text length is not supported (at least not "morphed")
-		if (mText == null || (mPreviousText != null && time != null && (mPreviousText.length() != time.length() || columnCharChangedPosition(mPreviousText, time)))) {
+		if (mText == null || (mPreviousText != null && time != null && (mPreviousText.length() != time.length() || colonCharChangedPosition(mPreviousText, time)))) {
 			shouldMorph = false;
 		}
 
@@ -90,7 +90,7 @@ public class DigitalClockView extends View {
 		mLocalChars = ArrayHelper.expandIfRequired(mLocalChars, newSize, pointsCount);
 		mLocalWidth = ArrayHelper.expandIfRequired(mLocalWidth, newSize, pointsCount);
 
-		mIsColumnChar = ArrayHelper.expandIfRequired(mIsColumnChar, newSize);
+		mIsColonChar = ArrayHelper.expandIfRequired(mIsColonChar, newSize);
 
 		// Save current chars and width in order to generate a morphing animation
 		if (shouldMorph) {
@@ -119,7 +119,7 @@ public class DigitalClockView extends View {
 			System.arraycopy(originWidths, 0, mPreviousWidth, 0, mPreviousWidth.length);
 		}
 
-		fetchGlyphs(time, mChars, mWidth, mIsColumnChar);
+		fetchGlyphs(time, mChars, mWidth, mIsColonChar);
 
 		mPreviousText = mText;
 		mText = time;
@@ -241,14 +241,14 @@ public class DigitalClockView extends View {
 
 			final int size = mChars.length;
 			for (int i = 0; i < size; i++) {
-				if (!mIsColumnChar[i]) {
+				if (!mIsColonChar[i]) {
 					if (!isMorphingAnimationRunning()) {
 						x += mWidth[i][0];
 					} else {
 						x += mFont.computeWidth(mPreviousWidth[i], mWidth[i], mMorphingPercent);
 					}
 				} else {
-					x += mFont.getColumnWidth();
+					x += mFont.getColonWidth();
 				}
 
 				if (i < size - 1) {
@@ -275,7 +275,7 @@ public class DigitalClockView extends View {
 			float charWidth;
 			final int size = mChars.length;
 			for (int i = 0; i < size; i++) {
-				if (!mIsColumnChar[i]) {
+				if (!mIsColonChar[i]) {
 					if (!isMorphingAnimationRunning()) {
 						mFont.draw(canvas, mChars[i]);
 						charWidth = mWidth[i][0];
@@ -284,8 +284,8 @@ public class DigitalClockView extends View {
 						charWidth = mFont.computeWidth(mPreviousWidth[i], mWidth[i], mMorphingPercent);
 					}
 				} else {
-					mFont.drawColumn(canvas);
-					charWidth = mFont.getColumnWidth();
+					mFont.drawColon(canvas);
+					charWidth = mFont.getColonWidth();
 				}
 
 				if (i < size - 1) {
@@ -310,7 +310,7 @@ public class DigitalClockView extends View {
 		return mMorphingPercent;
 	}
 
-	private static boolean columnCharChangedPosition(String previousTime, String time) {
+	private static boolean colonCharChangedPosition(String previousTime, String time) {
 		if (previousTime.length() != time.length()) {
 			return true;
 		}

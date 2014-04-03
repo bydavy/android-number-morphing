@@ -670,9 +670,9 @@ public class DFont implements Font {
 	}
 
 	@Override
-	public void drawColumn(Canvas canvas) {
+	public void drawColon(Canvas canvas) {
 		float halfHeight = innerBoxHeight() / 2f;
-		float halfWidth = getColumnWidth() / 2f;
+		float halfWidth = getColonWidth() / 2f;
 		float radius = mThickness / 2f;
 
 		canvas.drawCircle(halfWidth, halfHeight, radius, mPaint);
@@ -680,7 +680,7 @@ public class DFont implements Font {
 	}
 
 	@Override
-	public  float getColumnWidth() {
+	public  float getColonWidth() {
 		return mColumnWidth;
 	}
 }

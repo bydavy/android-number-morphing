@@ -76,7 +76,7 @@ public interface Font {
 
 
 	// FIXME Doesn't fit well in my current architecture
-	void drawColumn(Canvas canvas);
+	void drawColon(Canvas canvas);
 
-	float getColumnWidth();
+	float getColonWidth();
 }
