@@ -6,6 +6,8 @@ import com.bydavy.morpher.DrawingHelper;
 import com.bydavy.morpher.Font;
 
 public class DFont implements Font {
+	private static final boolean DEBUG_DRAW_CONTROL_POINTS = false;
+
 	private static final int POINTS_PER_GLYPH = 13 * 2;
 	private static final int DIGITS = 10;
 
@@ -16,6 +18,8 @@ public class DFont implements Font {
 
 	private final Path mPath;
 	private final Paint mPaint;
+	// Used for debug only
+	private final Paint mDebugControlPointsPaint;
 
 	private static boolean isDigit(char c) {
 		return c >= '0' && c <= '9';
@@ -79,6 +83,13 @@ public class DFont implements Font {
 		mDigits[9] = getNine();
 
 		mColumnWidth = innerBoxWidth() / 2;
+
+		if (!DEBUG_DRAW_CONTROL_POINTS) {
+			mDebugControlPointsPaint = null;
+		}else {
+			mDebugControlPointsPaint = new Paint();
+			mDebugControlPointsPaint.setStrokeWidth(4);
+		}
 	}
 
 	@Override
@@ -609,6 +620,38 @@ public class DFont implements Font {
 		}
 
 		canvas.drawPath(mPath, mPaint);
+
+		if (DEBUG_DRAW_CONTROL_POINTS) {
+			drawDebug(canvas, array);
+		}
+	}
+
+	private void drawDebug(Canvas canvas, float[] array) {
+		if (array == null) return;
+
+		int i = 0;
+		float startX = array[i++];
+		float startY = array[i++];
+
+		final int size = array.length;
+		while (i < size - 5) {
+			float x1 = array[i++];
+			float y1 = array[i++];
+			float x2 = array[i++];
+			float y2 = array[i++];
+			float endX = array[i++];
+			float endY = array[i++];
+
+			mDebugControlPointsPaint.setColor(Color.BLUE);
+			canvas.drawLine(startX, startY, x1, y1, mDebugControlPointsPaint);
+			mDebugControlPointsPaint.setColor(Color.RED);
+			canvas.drawLine(x1, y1, x2, y2, mDebugControlPointsPaint);
+			mDebugControlPointsPaint.setColor(Color.BLUE);
+			canvas.drawLine(x2, y2, endX, endY, mDebugControlPointsPaint);
+
+			startX = endX;
+			startY = endY;
+		}
 	}
 
 	@Override
@@ -643,6 +686,45 @@ public class DFont implements Font {
 		}
 
 		canvas.drawPath(mPath, mPaint);
+
+		if (DEBUG_DRAW_CONTROL_POINTS) {
+			drawDebug(canvas, a, b, percent);
+		}
+	}
+
+	private void drawDebug(Canvas canvas, float[] a, float b[], float percent) {
+		if (a == null || b == null || a.length != b.length) return;
+
+		int i = 0;
+		float startX = a[i] * (1 - percent) + b[i] * percent;
+		i++;
+		float startY = a[i] * (1 - percent) + b[i] * percent;
+		i++;
+
+		final int size = a.length;
+		while (i < size - 5) {
+			float x1 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float y1 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float x2 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float y2 = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float endX = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			float endY = a[i] * (1 - percent) + b[i] * percent;
+			i++;
+			mDebugControlPointsPaint.setColor(Color.BLUE);
+			canvas.drawLine(startX, startY, x1, y1, mDebugControlPointsPaint);
+			mDebugControlPointsPaint.setColor(Color.RED);
+			canvas.drawLine(x1, y1, x2, y2, mDebugControlPointsPaint);
+			mDebugControlPointsPaint.setColor(Color.BLUE);
+			canvas.drawLine(x2, y2, endX, endY, mDebugControlPointsPaint);
+
+			startX = endX;
+			startY = endY;
+		}
 	}
 
 	@Override
