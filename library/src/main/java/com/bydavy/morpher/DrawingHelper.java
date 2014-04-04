@@ -18,9 +18,20 @@ public class DrawingHelper {
 		float previousX = array[index - 2];
 		float previousY = array[index - 1];
 
+		// Generate intermediate points
+
+		float sumX = previousX + x;
+		float sumY = previousY + y;
+
+		float x1 = (sumX + previousX) / 3;
+		float y1 = (sumY + previousY) / 3;
+
+		float x2= (sumX + x) / 3;
+		float y2= (sumY + y) / 3;
+
 		// Add control points
-		index = addPoint(array, index, previousX, previousY);
-		index = addPoint(array, index, x, y);
+		index = addPoint(array, index, x1, y1);
+		index = addPoint(array, index, x2, y2);
 
 		// Add ending point
 		index = addPoint(array, index, x, y);
