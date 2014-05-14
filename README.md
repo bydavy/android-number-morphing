@@ -1,7 +1,7 @@
 android-morphing-number
 ========================
 
-This is an example of morphing effect implemented with Android UI toolkit. It is based on path and bezier curves. Some shortcuts have been taken.
+This is an example of morphing effect implemented with Android UI toolkit. It is based on path and bezier curves. Some shortcuts have been taken. For instance, in the current implementation the Font is hardcoded but we can imagine loading it from svg files. 
 
 ## Video
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=3H0XO6r4hRw
