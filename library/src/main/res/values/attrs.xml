@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- DigitalClockView -->
+    <declare-styleable name="DigitalClockView">
+        <attr name="textSize" format="dimension" />
+        <attr name="textThickness" format="dimension" />
+        <attr name="morphingDuration" format="integer" />
+    </declare-styleable>
+
+</resources>

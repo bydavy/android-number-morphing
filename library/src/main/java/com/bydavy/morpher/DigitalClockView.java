@@ -2,17 +2,23 @@ package com.bydavy.morpher;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import com.bydavy.morpher.font.DFont;
+import com.dgmltn.morphclock.app.R;
 
 public class DigitalClockView extends View {
 
 	public static int DEFAULT_MORPHING_DURATION = 300;
 
-	public static final Font DEFAULT_FONT = new DFont(170, 10);
+	public static final int DEFAULT_FONT_SIZE = 170;
+	public static final int DEFAULT_FONT_THICKNESS = 10;
+	public static final Font DEFAULT_FONT = new DFont(DEFAULT_FONT_SIZE, DEFAULT_FONT_THICKNESS);
 
 	private Font mFont;
 	private int mMorphingDurationInMs;
@@ -40,35 +46,39 @@ public class DigitalClockView extends View {
 
 	public DigitalClockView(Context context) {
 		super(context);
-		init();
+		init(context, null, 0);
 	}
 
 	public DigitalClockView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Configure view with AttributeSet
-		init();
+		init(context, attrs, 0);
 	}
 
 	public DigitalClockView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		// TODO Configure view with AttributeSet
-		init();
+		init(context, attrs, defStyle);
 	}
 
-	private void init() {
-		mFont = DEFAULT_FONT;
-		mMorphingDurationInMs = DEFAULT_MORPHING_DURATION;
+	private void init(Context context, AttributeSet attrs, int defStyle) {
+		if (attrs != null) {
+			TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.DigitalClockView, 0, 0);
+			int textSize = ta.getDimensionPixelSize(R.styleable.DigitalClockView_textSize, DEFAULT_FONT_SIZE);
+			int textThickness = ta.getDimensionPixelSize(R.styleable.DigitalClockView_textThickness, DEFAULT_FONT_THICKNESS);
+			mFont = new DFont(textSize, textThickness);
+			mMorphingDurationInMs = ta.getInt(R.styleable.DigitalClockView_morphingDuration, DEFAULT_MORPHING_DURATION);
+			ta.recycle();
+		}
+		else {
+			mFont = DEFAULT_FONT;
+			mMorphingDurationInMs = DEFAULT_MORPHING_DURATION;
+		}
 	}
 
 	public void setTime(String time) {
 		setTime(time, true);
 	}
 
-	public void setTimeNoAnimation(String time) {
-		setTime(time, false);
-	}
-
-	private void setTime(String time, boolean shouldMorph) {
+	public void setTime(String time, boolean shouldMorph) {
 		// Update only if time changed
 		if (time == mText || (mText != null && mText.equals(time))) return;
 
@@ -181,6 +191,10 @@ public class DigitalClockView extends View {
 		mMorphingDurationInMs = durationInMs;
 	}
 
+	public int getMorphingDuration() {
+		return mMorphingDurationInMs;
+	}
+
 	public void setFont(Font font) {
 		//if (mFont != font) {
 		mFont = font;
@@ -270,6 +284,13 @@ public class DigitalClockView extends View {
 		float xSeparator = mFont.getGlyphSeparatorWidth();
 
 		canvas.save();
+
+//		Paint redPen = new Paint();
+//		redPen.setColor(Color.RED);
+//		redPen.setStrokeWidth(1);
+//		canvas.drawLine(getPaddingLeft(), getPaddingTop(), getWidth() - getPaddingRight(), getPaddingTop(), redPen);
+//		canvas.drawLine(getPaddingLeft(), getHeight() - getPaddingBottom(), getWidth() - getPaddingRight(), getHeight() - getPaddingBottom(), redPen);
+
 		canvas.translate(getPaddingLeft(), getPaddingTop());
 		if (mChars != null) {
 			float charWidth;
