@@ -4,13 +4,10 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import com.bydavy.morpher.font.DFont;
-import com.dgmltn.morphclock.app.R;
 
 public class DigitalClockView extends View {
 
