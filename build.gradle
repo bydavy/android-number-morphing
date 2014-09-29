@@ -3,13 +3,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.9.1'
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:latest.release'
+        classpath 'com.android.tools.build:gradle:0.13.+'
+//        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:latest.release'
     }
 }
 
 subprojects { project ->
-	apply plugin: 'errorprone'
+//	apply plugin: 'errorprone'
 
 	repositories {
 	    mavenCentral()

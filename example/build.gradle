@@ -1,17 +1,13 @@
 apply plugin: 'android'
 
 dependencies {
-    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.android.support:support-v4:19.+'
     compile project(':library')
-    //compile group: 'com.google.guava', name: 'guava', version: '16.0.1'
-    //debugCompile 'com.android.support:support-v13:13.0.0'
-
-    //compile 'com.google.android.gms:play-services:3.1.36'
 }
 
 android {
-    compileSdkVersion 15
-    buildToolsVersion "19.0.1"
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
 
     testBuildType "debug"
 
