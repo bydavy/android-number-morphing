@@ -52,7 +52,7 @@ public class MultipleClocks extends Activity implements SystemClockManager.Syste
 		String shortFormattedTime = mShortDateFormat.format(time);
 		String formattedTime = mSimpleDateFormat.format(time);
 
-		mDigitalClockView.setTimeNoAnimation(formattedTime);
+		mDigitalClockView.setTime(formattedTime, false);
 		mDigitalClockViewPadding.setTime(formattedTime);
 		mDigitalClockViewBig.setTime(formattedTime);
 	}
