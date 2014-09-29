@@ -183,40 +183,30 @@ public class DFont implements Font {
 	}
 
 	private float[] getZero() {
-		float width = getZeroInnerBoxWidth();
+		float controlPointX = 0.375f;
+		float controlPointY = 0.25f;
 
-		float halfHeight = innerBoxHeight() / 2;
-		float halfWidth = width / 2;
+		float p1x = 0f;
+		float p1y = 0.5f;
 
-		float controlPointX = halfWidth / 2 + halfWidth / 4;
-		float controlPointY = halfHeight / 2;
+		float p2x = 0.5f;
+		float p2y = 0f;
 
-		float p1x = innerBoxStartX();
-		float p1y = innerBoxStartY() + halfHeight;
+		float p3x = 1f;
+		float p3y = 0.5f;
 
-		float p2x = innerBoxStartX() + halfWidth;
-		float p2y = innerBoxStartY();
-
-		float p3x = innerBoxStartX() + width;
-		float p3y = innerBoxStartY() + halfHeight;
-
-		float p4x = innerBoxStartX() + halfWidth;
-		float p4y = innerBoxStartY() + innerBoxHeight();
+		float p4x = 0.5f;
+		float p4y = 1f;
 
 		float p5x = p1x;
 		float p5y = p1y;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierCurve(points, index, p1x, p1y - controlPointY, p2x - controlPointX, p2y, p2x, p2y);
-		index = DrawingHelper.addBezierCurve(points, index, p2x + controlPointX, p2y, p3x, p3y - controlPointY, p3x, p3y);
-		index = DrawingHelper.addBezierCurve(points, index, p3x, p3y + controlPointY, p4x + controlPointX, p4y, p4x, p4y);
-		/*index =*/
-		DrawingHelper.addBezierCurve(points, index, p4x - controlPointX, p4y, p5x, p5y + controlPointY, p5x, p5y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, getZeroInnerBoxWidth(), innerBoxHeight(), borderThickness(), p1x, p1y)
+			.addBezierCurve(p1x, p1y - controlPointY, p2x - controlPointX, p2y, p2x, p2y)
+			.addBezierCurve(p2x + controlPointX, p2y, p3x, p3y - controlPointY, p3x, p3y)
+			.addBezierCurve(p3x, p3y + controlPointY, p4x + controlPointX, p4y, p4x, p4y)
+			.addBezierCurve(p4x - controlPointX, p4y, p5x, p5y + controlPointY, p5x, p5y)
+			.build();
 	}
 
 	private float[] getOneBounds() {
@@ -228,16 +218,14 @@ public class DFont implements Font {
 	}
 
 	private float[] getOne() {
-		float width = getOneInnerWidth();
+		float p1x = 0f;
+		float p1y = 0.1f;
 
-		float p1x = innerBoxStartX();
-		float p1y = innerBoxStartY();
-
-		float p2x = innerBoxStartX() + width;
-		float p2y = p1y;
+		float p2x = 1f;
+		float p2y = 0f;
 
 		float p3x = p2x;
-		float p3y = innerBoxStartY() + innerBoxHeight() + borderThickness();
+		float p3y = 1f + (borderThickness() / innerBoxHeight());
 
 		float soft1x = p2x;
 		float soft1y = (p2y + p3y) / 2 * (1f / 3);
@@ -245,17 +233,12 @@ public class DFont implements Font {
 		float soft2x = p2x;
 		float soft2y = (p2y + p3y) / 2 * (2f / 3);
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p2x, p2y);
-		index = DrawingHelper.addBezierStraightLine(points, index, soft1x, soft1y);
-		index = DrawingHelper.addBezierStraightLine(points, index, soft2x, soft2y);
-		/*index =*/
-		DrawingHelper.addBezierStraightLine(points, index, p3x, p3y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, getOneInnerWidth(), innerBoxHeight(), borderThickness(), p1x, p1y)
+			.addBezierStraightLine(p2x, p2y)
+			.addBezierStraightLine(soft1x, soft1y)
+			.addBezierStraightLine(soft2x, soft2y)
+			.addBezierStraightLine(p3x, p3y)
+			.build();
 	}
 
 	private float[] getTwoBounds() {
@@ -267,37 +250,29 @@ public class DFont implements Font {
 	}
 
 	private float[] getTwo() {
-		float width = getTwoInnerWidth();
-		float radius = width / 2;
+		float p1x = 0f;
+		float p1y = 0.25f;
 
-		float p1x = innerBoxStartX();
-		float p1y = innerBoxStartY() + radius;
+		float p2x = 1f;
+		float p2y = 0.25f;
 
-		float p2x = innerBoxStartX() + width;
-		float p2y = p1y;
+		float p3x = 0.85f;
+		float p3y = 0.45f;
 
-		float p3x = p2x;
-		float p3y = p2y + width * (1f / 20);
+		float p4x = 0f;
+		float p4y = 1f;
 
-		float p4x = innerBoxStartX();
-		float p4y = innerBoxStartY() + innerBoxHeight();
+		float p5x = 1f;
+		float p5y = 1f;
 
-		float p5x = innerBoxStartX() + width;
-		float p5y = innerBoxStartY() + innerBoxHeight();
+		float controlSegmentHalfCircle = 1 / 3f;
 
-		float controlSegmentHalfCircle = 4 / 3f * radius;
-
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierCurve(points, index, p1x, p1y - controlSegmentHalfCircle, p2x, p2y - controlSegmentHalfCircle, p2x, p2y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p3x, p3y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p4x, p4y);
-		/*index =*/
-		DrawingHelper.addBezierStraightLine(points, index, p5x, p5y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, getTwoInnerWidth(), innerBoxHeight(), borderThickness(), p1x, p1y)
+			.addBezierCurve(p1x, p1y - controlSegmentHalfCircle, p2x, p2y - controlSegmentHalfCircle, p2x, p2y)
+			.addBezierCurve(p2x, p2y + 0.1f, p2x, p3y - 0.1f, p3x, p3y)
+			.addBezierStraightLine(p4x, p4y)
+			.addBezierStraightLine(p5x, p5y)
+			.build();
 	}
 
 	private float[] getThreeBounds() {
@@ -333,17 +308,12 @@ public class DFont implements Font {
 		float controlSegmentHalfCircle = 4 / 3f * radius;
 		float controlSegmentQuadrant = KAPPA * radius;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierCurve(points, index, p1x, p1y - controlSegmentHalfCircle, soft1x, soft1y - controlSegmentHalfCircle, soft1x, soft1y);
-		index = DrawingHelper.addBezierCurve(points, index, soft1x, soft1y + controlSegmentQuadrant, p2x + controlSegmentQuadrant, p2y, p2x, p2y);
-		index = DrawingHelper.addBezierCurve(points, index, p2x + controlSegmentQuadrant, p2y, soft2x, soft2y - controlSegmentQuadrant, soft2x, soft2y);
-		/*index =*/
-		DrawingHelper.addBezierCurve(points, index, soft2x, soft2y + controlSegmentHalfCircle, p3x, p3y + controlSegmentHalfCircle, p3x, p3y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, p1x, p1y)
+			.addBezierCurve(p1x, p1y - controlSegmentHalfCircle, soft1x, soft1y - controlSegmentHalfCircle, soft1x, soft1y)
+			.addBezierCurve(soft1x, soft1y + controlSegmentQuadrant, p2x + controlSegmentQuadrant, p2y, p2x, p2y)
+			.addBezierCurve(p2x + controlSegmentQuadrant, p2y, soft2x, soft2y - controlSegmentQuadrant, soft2x, soft2y)
+			.addBezierCurve(soft2x, soft2y + controlSegmentHalfCircle, p3x, p3y + controlSegmentHalfCircle, p3x, p3y)
+			.build();
 	}
 
 
@@ -374,17 +344,12 @@ public class DFont implements Font {
 		float soft1x = p3x;
 		float soft1y = p1y;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p2x, p2y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p3x, p3y);
-		index = DrawingHelper.addBezierStraightLine(points, index, soft1x, soft1y);
-		/*index =*/
-		DrawingHelper.addBezierStraightLine(points, index, p4x, p4y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, p1x, p1y)
+			.addBezierStraightLine(p2x, p2y)
+			.addBezierStraightLine(p3x, p3y)
+			.addBezierStraightLine(soft1x, soft1y)
+			.addBezierStraightLine(p4x, p4y)
+			.build();
 	}
 
 	private float[] getFiveBounds() {
@@ -417,17 +382,12 @@ public class DFont implements Font {
 		float soft1x = innerBoxStartX() + width;
 		float soft1y = p3y + radius;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p2x, p2y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p3x, p3y);
-		index = DrawingHelper.addBezierCurve(points, index, p3x + radius, p3y, soft1x, soft1y - radius, soft1x, soft1y);
-		/*index =*/
-		DrawingHelper.addBezierCurve(points, index, soft1x, soft1y + radius, p4x + radius, p4y, p4x, p4y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, p1x, p1y)
+			.addBezierStraightLine(p2x, p2y)
+			.addBezierStraightLine(p3x, p3y)
+			.addBezierCurve(p3x + radius, p3y, soft1x, soft1y - radius, soft1x, soft1y)
+			.addBezierCurve(soft1x, soft1y + radius, p4x + radius, p4y, p4x, p4y)
+			.build();
 	}
 
 	private float[] getSixBounds() {
@@ -462,18 +422,13 @@ public class DFont implements Font {
 		float soft2x = innerBoxStartX() + width;
 		float soft2y = innerBoxStartY() + innerBoxHeight() - radius;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierCurve(points, index, p1x / 2, 0, 0, p2y - (p2y / 2), p2x, p2y);
-		index = DrawingHelper.addBezierCurve(points, index, p2x, p2y + halfRadius, soft1x - halfRadius, soft1y, soft1x, soft1y);
-		index = DrawingHelper.addBezierCurve(points, index, soft1x + halfRadius, soft1y, soft2x, soft2y + halfRadius, soft2x, soft2y);
-		// FIXME Not a perfect circle
-		/*index =*/
-		DrawingHelper.addBezierCurve(points, index, soft2x, soft2y - radius - halfRadius, p3x, p3y - radius - halfRadius, p3x, p3y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, p1x, p1y)
+			.addBezierCurve(p1x / 2, 0, 0, p2y - (p2y / 2), p2x, p2y)
+			.addBezierCurve(p2x, p2y + halfRadius, soft1x - halfRadius, soft1y, soft1x, soft1y)
+			.addBezierCurve(soft1x + halfRadius, soft1y, soft2x, soft2y + halfRadius, soft2x, soft2y)
+			// FIXME Not a perfect circle
+			.addBezierCurve(soft2x, soft2y - radius - halfRadius, p3x, p3y - radius - halfRadius, p3x, p3y)
+			.build();
 	}
 
 	private float[] getSevenBounds() {
@@ -485,6 +440,32 @@ public class DFont implements Font {
 	}
 
 	private float[] getSeven() {
+		float p1x = 0f;
+		float p1y = 0f;
+
+		float p2x = 1f;
+		float p2y = 0f;
+
+		float p3x = 0.4f;
+		float p3y = 1f + (borderThickness() / innerBoxHeight());
+
+		// Between p1 and p2
+		float soft1x = (p1x + p2x) / 3;
+		float soft1y = (p1y + p2y) / 3;
+
+		// Between soft1 and p2
+		float soft2x = (soft1x + p2x) / 2;
+		float soft2y = (soft1y + p2y) / 2;
+
+		return new DrawingHelper(POINTS_PER_GLYPH, getSevenInnerWidth(), innerBoxHeight(), borderThickness(), p1x, p1y)
+			.addBezierStraightLine(soft1x, soft1y)
+			.addBezierStraightLine(soft2x, soft2y)
+			.addBezierStraightLine(p2x, p2y)
+			.addBezierCurve(p2x, p2y, p3x, p3y - 0.4f, p3x, p3y)
+			.build();
+	}
+
+	private float[] getSevenOld() {
 		float width = getSevenInnerWidth();
 
 		float p1x = innerBoxStartX();
@@ -504,17 +485,12 @@ public class DFont implements Font {
 		float soft2x = (p2x + p3x) / 2;
 		float soft2y = (p2y + p3y) / 2;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierStraightLine(points, index, soft1x, soft1y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p2x, p2y);
-		index = DrawingHelper.addBezierStraightLine(points, index, soft2x, soft2y);
-		/*index =*/
-		DrawingHelper.addBezierStraightLine(points, index, p3x, p3y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, p1x, p1y)
+			.addBezierStraightLine(soft1x, soft1y)
+			.addBezierStraightLine(p2x, p2y)
+			.addBezierStraightLine(soft2x, soft2y)
+			.addBezierStraightLine(p3x, p3y)
+			.build();
 	}
 
 	private float[] getEightBounds() {
@@ -547,17 +523,12 @@ public class DFont implements Font {
 		float p5x = p1x;
 		float p5y = p1y;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierCurve(points, index, leftControlPointX, p1y, leftControlPointX, p2y, p2x, p2y);
-		index = DrawingHelper.addBezierCurve(points, index, rightControlPointX, p2y, rightControlPointX, p3y, p3x, p3y);
-		index = DrawingHelper.addBezierCurve(points, index, rightControlPointX, p3y, rightControlPointX, p4y, p4x, p4y);
-		/*index =*/
-		DrawingHelper.addBezierCurve(points, index, leftControlPointX, p4y, leftControlPointX, p5y, p5x, p5y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, p1x, p1y)
+			.addBezierCurve(leftControlPointX, p1y, leftControlPointX, p2y, p2x, p2y)
+			.addBezierCurve(rightControlPointX, p2y, rightControlPointX, p3y, p3x, p3y)
+			.addBezierCurve(rightControlPointX, p3y, rightControlPointX, p4y, p4x, p4y)
+			.addBezierCurve(leftControlPointX, p4y, leftControlPointX, p5y, p5x, p5y)
+			.build();
 	}
 
 	private float[] getNineBounds() {
@@ -591,18 +562,13 @@ public class DFont implements Font {
 		float soft1x = innerBoxStartX();
 		float soft1y = innerBoxStartY() + radius;
 
-		final float[] points = createGlyphPointsArray();
-
-		int index = 0;
-		index = DrawingHelper.addPoint(points, index, p1x, p1y);
-		index = DrawingHelper.addBezierCurve(points, index, p1x, p1y + radiusControl, soft1x, soft1y + radiusControl, soft1x, soft1y);
-		index = DrawingHelper.addBezierCurve(points, index, soft1x, soft1y - radiusControl, p2x, p2y - radiusControl, p2x, p2y);
-		index = DrawingHelper.addBezierStraightLine(points, index, p3x, p3y);
-		// FIXME Doesn't look good
-		/*index =*/
-		DrawingHelper.addBezierCurve(points, index, p3x, p3y + (diameter * (2 / 3f)), p4x + radius, p4y, p4x, p4y);
-
-		return points;
+		return new DrawingHelper(POINTS_PER_GLYPH, p1x, p1y)
+			.addBezierCurve(p1x, p1y + radiusControl, soft1x, soft1y + radiusControl, soft1x, soft1y)
+			.addBezierCurve(soft1x, soft1y - radiusControl, p2x, p2y - radiusControl, p2x, p2y)
+			.addBezierStraightLine(p3x, p3y)
+			// FIXME Doesn't look good
+			.addBezierCurve(p3x, p3y + (diameter * (2 / 3f)), p4x + radius, p4y, p4x, p4y)
+			.build();
 	}
 
 	@Override
