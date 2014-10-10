@@ -6,7 +6,9 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+
 import com.bydavy.morpher.font.DFont;
 
 public class DigitalClockView extends View {
@@ -39,6 +41,9 @@ public class DigitalClockView extends View {
 	// FIXME The colon char doesn't fit in my current design
 	private boolean[] mIsColonChar;
 
+	// Optimization to call costly requestLayout() less often
+	private boolean mHasFixedWidth;
+
 	private ObjectAnimator mMorphingAnimation;
 
 	public DigitalClockView(Context context) {
@@ -69,6 +74,12 @@ public class DigitalClockView extends View {
 			mFont = DEFAULT_FONT;
 			mMorphingDurationInMs = DEFAULT_MORPHING_DURATION;
 		}
+	}
+
+	@Override
+	public void setLayoutParams(ViewGroup.LayoutParams params) {
+		super.setLayoutParams(params);
+		mHasFixedWidth = params.width != ViewGroup.LayoutParams.WRAP_CONTENT;
 	}
 
 	public void setTime(String time) {
@@ -138,7 +149,9 @@ public class DigitalClockView extends View {
 			startMorphingAnimation();
 		}
 
-		requestLayout();
+		if (!mHasFixedWidth) {
+			requestLayout();
+		}
 		invalidate();
 	}
 
@@ -216,7 +229,9 @@ public class DigitalClockView extends View {
 		if (mFontSize != sizeInPx) {
 			mFontSize = sizeInPx;
 
-			requestLayout();
+			if (!mHasFixedWidth) {
+				requestLayout();
+			}
 			//invalidate();
 		}
 	}
@@ -225,7 +240,9 @@ public class DigitalClockView extends View {
 		if (mThickness != thicknessInPx) {
 			mThickness = thicknessInPx;
 
-			requestLayout();
+			if (!mHasFixedWidth) {
+				requestLayout();
+			}
 			//invalidate();
 		}
 	}*/
@@ -319,7 +336,9 @@ public class DigitalClockView extends View {
 	public void setMorphingPercent(float percent) {
 		mMorphingPercent = percent;
 
-		requestLayout();
+		if (!mHasFixedWidth) {
+			requestLayout();
+		}
 		invalidate();
 	}
 
